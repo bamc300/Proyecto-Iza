@@ -1,0 +1,87 @@
+.fg-welcome {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.fg-welcome__area {
+  margin-top: 40px;
+}
+
+.fg-welcome__headline {
+  position: relative;
+  margin: 0 0 50px;
+}
+
+.fg-welcome p {
+  max-width: 500px;
+  margin: 20px auto;
+  line-height: 1.5;
+  font-size: 1.1rem;
+}
+
+.fg-button {
+  display: inline-block;
+  padding: 12px 24px 10px 24px;
+  text-decoration: none;
+  font-size: 14px;
+  border-width: 0;
+  border-radius: 30px;
+  line-height: 1;
+  font-weight: 500;
+  background: $color-primary;
+  color: white;
+  cursor: pointer;
+
+  &:visited, &:hover, &:active {
+    color: white;
+  }
+}
+
+.fg-products {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fg-products__item {
+  width: 30%;
+  margin-left: 5%;
+  margin-bottom: 20px;
+
+  &:nth-child(3n+1) {
+    margin-left: 0;
+  }
+}
+
+.fg-products__thumbnail {
+  max-width: 100%;
+}
+
+.fg-product-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.snipcart-modal__container {
+  .logged-in & {
+    // Make room for the admin bar when logged in.
+    padding-top: 102px;
+  }
+}
+
+.fg-video {
+  display: flex;
+  justify-content: center;
+
+  iframe {
+    max-width: 100%;
+  }
+}
+
+.fg-image-widget {
+  max-width: 100%;
+}

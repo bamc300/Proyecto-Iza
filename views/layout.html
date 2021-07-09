@@ -1,0 +1,155 @@
+{# Automatically extends the right outer layout and also handles AJAX situations #}
+{% extends data.outerLayout %}
+{% import '@apostrophecms/template:macros/arrows.html' as arrows with context %}
+{% import "link.html" as link %}
+
+{% set title = data.piece.title or data.page.title %}
+{% block title %}
+  {{ title }} - {{ data.global.siteTitle or 'IZA BOYACA'}}
+  {% if not title %}
+    {{ apos.log('Looks like you forgot to override the title block in a template that does not have access to an Apostrophe page or piece.') }}
+  {% endif %}
+{% endblock %}
+
+{% block extraHead %}
+  {#
+    This block outputs its contents in the HTML document's <head>.
+    It is a good place to put extra <script> <link> and <meta> tags.
+  #}
+  <link rel="apple-touch-icon" sizes="57x57" href="/fav/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/fav/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/fav/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/fav/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/fav/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/fav/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/fav/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/fav/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/fav/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/fav/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/fav/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/fav/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/fav/favicon-16x16.png">
+  <link rel="manifest" href="/fav/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/fav/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Caveat:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <nav>
+  <ul class="menu">
+    <li class="logo"><a href="/">IZA BOYACA</a></li>
+    <li><a href ='#'><div id="google_translate_element"></div></a></li>
+    <li class="item"><a href="/inicio">Inicio</a></li>
+    <li class="item"><a href="#">About</a></li>
+    <li class="item"><a href="#">Services</a></li>
+    <li class="item"><a href="#">Features</a></li>
+    <li class="item"><a href="/shop">Tienda</a></li>
+    <li class="item"><a href="#">Contact</a>
+    </li>
+    <li class="item buttons"><a href="/login">Log In</a></li>
+    <li class="toggle"><a href="#"><i class="fas fa-bars"></i></a></li>
+    
+  </ul>
+</nav> 
+
+{% endblock %}
+
+{% block beforeMain %}
+{% block pageTitle %}
+    <div class="page-title-wrapper">
+      {% set title = data.page.title %}
+      {% if data.piece %}
+        {% set title = data.piece.title %}
+      {% endif %}
+      <h1 class="page-title">{{ title }}</h1>
+      {% block subnav %}
+        {% if data.page and (not data.piece) and data.page._children.length %}
+          {% set placeheld = false %}
+          <section class="sub-nav">
+            {# Side nav: children of the current page #}
+            {% if data.page._children.length %}
+              <nav class="children">
+                {% for page in data.page._children %}
+                  <a class="button button--small" href="{{ page._url }}">{{ page.title }}</a>
+                {% endfor %}
+              </nav>
+            {% endif %}
+          </section>
+        {% endif %}
+      {% endblock %}
+
+  {% block breadcrumbs %}
+    {# Breadcrumb trail to the current page or piece. Not on the home page #}
+    {% if data.page and data.page._ancestors.length %}
+      <div class="inner">
+        <nav class="purple breadcrumb">
+          {% for page in data.page._ancestors %}
+            <a href="{{ page._url }}">{{ page.title }}</a>
+          {% endfor %}
+          <a {{ ('class="current-page"' if not data.piece) | safe }} href="{{ data.page._url }}">{{ data.page.title }}</a>
+          {% if data.piece %}
+            <a class="current-page" href="{{ data.piece._url }}">{{ data.piece.title }}</a>
+          {% endif %}
+        </nav>
+      </div>
+    {% endif %}
+  {% endblock %}
+  
+    </div>
+  {% endblock %}
+  <div class="layout">
+    <main>
+{% endblock %}
+
+{% block main %}
+  {#
+    Usually, your page templates in the @apostrophecms/pages module will override
+    this block. It is safe to assume this is where your page-specific content
+    should go.
+  #}
+{% endblock %}
+
+{% block afterMain %}
+    </main>
+  </div>
+  <footer class="footer">
+    {% if data.global.footerLinks.length %}
+      <nav class="footer-links">
+        {% for item in data.global.footerLinks %}
+          {% set path = apos.helper.linkPath(item) + '?utm_source=demo' %}
+          {{ link.render({
+            label: item.linkText,
+            path: path,
+            target: item.linkTarget,
+            class: 'footer-links__link'
+          })}}
+        {% endfor %}
+      </nav>
+    {% endif %}
+  </footer>
+{% endblock %}
+{% block extraBody %}
+  <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.css" />
+  <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
+  <div id="snipcart" data-config-modal-style="side" data-api-key="MDdkNTcxY2MtMDM1Yy00MGQxLTljNzQtNTY0OWFlZDRjZDk1NjM3NTQwODc2OTE5MTA4NTYw" data-currency="COP" hidden></div>
+  <script>
+    document.addEventListener('snipcart.ready', function() {
+        Snipcart.api.session.setLanguage('es');
+    });
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script type="text/javascript">
+function googleTranslateElementInit(){
+new google.translate.TranslateElement({pageLanguage:'us',layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element');
+} 
+</script>
+<style type="text/css">
+body{
+top: 0 !important;
+}
+
+.goog-te-banner-frame {
+    display: none;
+}
+
+</style>
+{% endblock %}
